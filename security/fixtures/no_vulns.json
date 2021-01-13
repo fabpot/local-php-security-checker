@@ -1,0 +1,12 @@
+{
+    "name": "fabpot/_temp",
+    "require": {
+        "symfony/apache-pack": "^1.0"
+    },
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@potencier.org"
+        }
+    ]
+}

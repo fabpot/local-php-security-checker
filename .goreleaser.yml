@@ -1,0 +1,18 @@
+before:
+    hooks:
+        - go mod download
+builds:
+  - env:
+        - CGO_ENABLED=0
+    goos:
+        - linux
+        - windows
+        - darwin
+archives:
+    - format: binary
+checksum:
+    name_template: 'checksums.txt'
+snapshot:
+    name_template: "{{ .Tag }}-next"
+changelog:
+    skip: true
