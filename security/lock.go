@@ -28,14 +28,14 @@ type Lock struct {
 func NewLock(reader io.Reader) (*Lock, error) {
 	contents, err := ioutil.ReadAll(reader)
 	if err != nil {
-		return nil, errors.New("unable to read lock file")
+		return nil, errors.New(Red + "unable to read lock file" + NC)
 	}
 	var l *Lock
 	if err = json.Unmarshal(contents, &l); err != nil {
-		return nil, errors.New("lock file is not valid JSON (not a composer.lock file?)")
+		return nil, errors.New(Red + "lock file is not valid JSON (not a composer.lock file?)" + NC)
 	}
 	if l.Packages == nil && l.DevPackages == nil {
-		return nil, errors.New("lock file is not valid (no packages and no dev packages)")
+		return nil, errors.New(Red + "lock file is not valid (no packages and no dev packages)" + NC)
 	}
 	return l, nil
 }
@@ -56,7 +56,7 @@ func LocateLock(path string) (io.Reader, error) {
 
 	reader, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("%s is not a valid lock file: %s", path, err)
+		return nil, fmt.Errorf(Red+"%s is not a valid lock file: %s"+NC, path, err)
 	}
 
 	return reader, nil

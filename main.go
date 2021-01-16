@@ -21,16 +21,43 @@ var (
 	date    = "unknown"
 )
 
+func printHeader() {
+	fmt.Println(" _                    _   ____  _   _ ____  ")
+	fmt.Println("| |    ___   ___ __ _| | |  _ \\| | | |  _ \\	")
+	fmt.Println("| |   / _ \\ / __/ _` | | | |_) | |_| | |_) |")
+	fmt.Println("| |__| (_) | (_| (_| | | |  __/|  _  |  __/ ")
+	fmt.Println("|_____\\___/ \\___\\__,_|_| |_|   |_| |_|_|    ")
+	fmt.Println("")
+	fmt.Println(" ____                       _ _            ____ _               _ ")
+	fmt.Println("/ ___|  ___  ___ _   _ _ __(_) |_ _   _   / ___| |__   ___  ___| | _____ _ __ ")
+	fmt.Println("\\___ \\ / _ \\/ __| | | | '__| | __| | | | | |   | '_ \\ / _ \\/ __| |/ / _ \\ '__|")
+	fmt.Println(" ___) |  __/ (__| |_| | |  | | |_| |_| | | |___| | | |  __/ (__|   <  __/ |   ")
+	fmt.Println("|____/ \\___|\\___|\\__,_|_|  |_|\\__|\\__, |  \\____|_| |_|\\___|\\___|_|\\_\\___|_|   ")
+	fmt.Println("                                  |___/                                       ")
+	fmt.Printf("%s, built at %s\n", version, date)
+}
+
 func main() {
 	format := flag.String("format", "ansi", "Output format (ansi, markdown, json, or yaml)")
 	path := flag.String("path", "", "composer.lock file or directory")
 	local := flag.Bool("local", false, "Do not make HTTP calls (needs a valid cache file)")
 	updateCacheOnly := flag.Bool("update-cache", false, "Update the cache (other flags are ignored)")
 	help := flag.Bool("help", false, "Output help and version")
+	quiet := flag.Bool("quiet", false, "Only print out vulnerable dependencies")
+	ansi := flag.Bool("ansi", false, "no color")
 	flag.Parse()
 
+	if *ansi {
+		security.Nocolor()
+	}
+
+	if !(*quiet) {
+		security.Verbose = true
+		printHeader()
+	}
+
 	if *help {
-		fmt.Printf("Local PHP Security Checker %s, built at %s\n", version, date)
+		flag.PrintDefaults()
 		os.Exit(0)
 	}
 

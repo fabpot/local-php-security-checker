@@ -11,6 +11,10 @@ import (
 	"github.com/hashicorp/go-version"
 )
 
+var (
+	Verbose bool = false
+)
+
 // Vulnerabilities stores vulnerabilities for a lock file
 type Vulnerabilities map[string]Vulnerability
 
@@ -76,9 +80,17 @@ func (v *Vulnerabilities) Get(pkg string) *Vulnerability {
 // Analyze checks if a give lock references packages with known security issues
 func Analyze(lock *Lock, db *AdvisoryDB) *Vulnerabilities {
 	vulnerabilities := make(Vulnerabilities)
+
+	if Verbose {
+		fmt.Fprintf(os.Stdout, "\ndatabase known vulnerabilities %d\n", len(db.Advisories))
+		fmt.Fprintf(os.Stdout, "database version %s\n", db.Date)
+		fmt.Println("")
+	}
+
 	for _, p := range append(lock.Packages, lock.DevPackages...) {
 		var advs []SimpleAdvisory
 		composerReference := "composer://" + p.Name
+
 		for _, a := range db.Advisories {
 			if a.Reference != composerReference {
 				continue
@@ -119,14 +131,29 @@ func Analyze(lock *Lock, db *AdvisoryDB) *Vulnerabilities {
 					Link:  a.Link,
 					Title: a.Title,
 				})
-			}
-		}
+			} // end advisory version iter
+
+		} // end advisories iter
+
 		if len(advs) > 0 {
+			// vulnerability found
+			if Verbose {
+				fmt.Println(Red + composerReference + "@" + string(p.Version) + " vulnerability found !" + NC)
+			}
 			vulnerabilities[p.Name] = Vulnerability{
 				Version:    string(p.Version),
 				Advisories: advs,
 			}
+		} else {
+			// no vulnerability found
+			if Verbose {
+				fmt.Println(Green + composerReference + "@" + string(p.Version) + NC)
+			}
 		}
+	}
+
+	if Verbose {
+		fmt.Println("")
 	}
 
 	return &vulnerabilities

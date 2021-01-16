@@ -22,6 +22,7 @@ const AdvisoryArchiveURL = "https://codeload.github.com/FriendsOfPHP/security-ad
 type AdvisoryDB struct {
 	Advisories  []Advisory
 	noHTTPCalls bool
+	Date        string
 }
 
 // Advisory represents a single security advisory
@@ -71,6 +72,7 @@ func (db *AdvisoryDB) Load() error {
 	if cacheContent, err := ioutil.ReadFile(cachePath); err == nil {
 		// ignore errors
 		json.Unmarshal(cacheContent, &cache)
+		db.Date = cache.Date
 	}
 
 	if db.noHTTPCalls && cache == nil {
@@ -101,6 +103,7 @@ func (db *AdvisoryDB) Load() error {
 			date := resp.Header.Get("Date")
 			if key != "" || date != "" {
 				cache = &Cache{Key: key, Date: date, Body: body}
+				db.Date = cache.Date
 			}
 			cacheContent, err := json.Marshal(cache)
 			if err == nil {
