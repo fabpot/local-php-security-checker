@@ -42,6 +42,15 @@ func NewLock(reader io.Reader) (*Lock, error) {
 
 // LocateLock locates a composer.lock
 func LocateLock(path string) (io.Reader, error) {
+	if strings.HasPrefix(path, "~") {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return nil, err
+		}
+
+		path = strings.Replace(path, "~", homeDir, 1)
+	}
+
 	if path == "" {
 		cwd, err := os.Getwd()
 		if err != nil {
