@@ -1,7 +1,7 @@
 Local PHP Security Checker
 ==========================
 
-The Local PHP Security Checker is a command line tool that checks if your PHP
+The Local PHP Security Checker is a command line tool written in GO that checks if your PHP
 application depends on PHP packages with known security vulnerabilities. It
 uses the [Security Advisories Database][1] behind the scenes.
 
@@ -29,7 +29,7 @@ You can also pass a `--path` to check a specific directory:
     |____/ \___|\___|\__,_|_|  |_|\__|\__, |  \____|_| |_|\___|\___|_|\_\___|_|
                                       |___/
     1.0, built at Fri, 15 Jan 2021
-    
+
     database known vulnerabilities 1065
     database version Fri, 15 Jan 2021 17:39:07 GMT
 
