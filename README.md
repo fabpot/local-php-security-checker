@@ -28,5 +28,13 @@ downloads it from Github if it changed since the last run. If you want to avoid
 the HTTP round-trip, use `--local`. To force a database update without checking
 for a project, use `--update-cache`.
 
+Building Docker image
+
+    $ docker build -t local-php-security-checker
+
+Mount directory containing a PHP project
+
+    $ docker run -v /path/to/your/project:/project/ local-php-security-checker --path=/project
+
 [1]: https://github.com/FriendsOfPHP/security-advisories
 [2]: https://github.com/fabpot/local-php-security-checker/releases
