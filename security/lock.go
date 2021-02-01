@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/mitchellh/go-homedir"
 	"io"
 	"io/ioutil"
 	"os"
@@ -42,6 +43,11 @@ func NewLock(reader io.Reader) (*Lock, error) {
 
 // LocateLock locates a composer.lock
 func LocateLock(path string) (io.Reader, error) {
+	path, err := homedir.Expand(path)
+	if err != nil {
+		return nil, err
+	}
+
 	if path == "" {
 		cwd, err := os.Getwd()
 		if err != nil {
