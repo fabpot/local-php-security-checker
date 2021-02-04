@@ -59,7 +59,7 @@ func NewDB(noHTTPCalls bool) (*AdvisoryDB, error) {
 // Load Loads fetches the database from Github and reads/loads current advisories
 // from the repository. Cache handling is delegated to http.Transport and
 // **must** be handled appropriately.
-func (db *AdvisoryDB) Load() error {
+func (db *AdvisoryDB) Load(advisoryArchiveURL string) error {
 	if len(db.Advisories) > 0 {
 		return nil
 	}
@@ -78,7 +78,7 @@ func (db *AdvisoryDB) Load() error {
 	}
 
 	if !db.noHTTPCalls {
-		req, err := http.NewRequest("GET", AdvisoryArchiveURL, nil)
+		req, err := http.NewRequest("GET", advisoryArchiveURL, nil)
 		if err != nil {
 			return err
 		}
