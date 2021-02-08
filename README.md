@@ -30,7 +30,7 @@ for a project, use `--update-cache`.
 
 Building Docker image
 
-    $ docker build -t local-php-security-checker
+    $ docker build -t local-php-security-checker .
 
 Mount directory containing a PHP project
 
