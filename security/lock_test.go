@@ -20,7 +20,7 @@ func TestLock(t *testing.T) {
 	assert.Equal(t, lock.Packages[0].Name, "symfony/apache-pack")
 }
 
-func TestIntegerAsVerionLock(t *testing.T) {
+func TestIntegerAsVersionLock(t *testing.T) {
 	file, err := os.Open("fixtures/integer_as_version.lock")
 	if err != nil {
 		panic(err)
