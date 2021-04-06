@@ -2,6 +2,7 @@ package security
 
 import (
 	"encoding/json"
+	"regexp"
 )
 
 // Version represents a composer.json version (can be a string or an integer)
@@ -20,6 +21,11 @@ func (v *Version) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &tmp); err != nil {
 		return err
 	}
+
+	// be more lenient with pre-release versions, convert "2.0.0-alpha12" to "2.0.0-alpha.12"
+	re := regexp.MustCompile(`(alpha|beta)(\d+)$`)
+	tmp = re.ReplaceAllString(tmp, "$1.$2")
+
 	*v = Version(tmp)
 	return nil
 }
