@@ -23,7 +23,7 @@ func (v *Version) UnmarshalJSON(b []byte) error {
 	}
 
 	// be more lenient with pre-release versions, convert "2.0.0-alpha12" to "2.0.0-alpha.12"
-	re := regexp.MustCompile(`(alpha|beta)(\d+)$`)
+	re := regexp.MustCompile(`(?i)(alpha|beta|rc)(\d+)$`)
 	tmp = re.ReplaceAllString(tmp, "$1.$2")
 
 	*v = Version(tmp)

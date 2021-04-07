@@ -57,4 +57,5 @@ func TestPrereleaseWithoutDot(t *testing.T) {
 	lock, err := NewLock(bufio.NewReader(file))
 	assert.Equal(t, lock.Packages[0].Version, Version("v1.0.0-alpha.10"))
 	assert.Equal(t, lock.Packages[1].Version, Version("2.0-beta.3"))
+	assert.Equal(t, lock.Packages[2].Version, Version("2.0-RC.1"))
 }
