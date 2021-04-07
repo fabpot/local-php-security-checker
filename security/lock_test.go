@@ -48,3 +48,13 @@ func TestLocateLock(t *testing.T) {
 		assert.Nil(t, err)
 	}
 }
+
+func TestPrereleaseWithoutDot(t *testing.T) {
+	file, err := os.Open("fixtures/prerelease_without_dot.lock")
+	if err != nil {
+		panic(err)
+	}
+	lock, err := NewLock(bufio.NewReader(file))
+	assert.Equal(t, lock.Packages[0].Version, Version("v1.0.0-alpha.10"))
+	assert.Equal(t, lock.Packages[1].Version, Version("2.0-beta.3"))
+}
