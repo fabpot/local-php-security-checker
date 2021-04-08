@@ -19,7 +19,7 @@ You can also pass a `--path` to check a specific directory:
     $ local-php-security-checker --path=/path/to/php/project/composer.lock
 
 By default, the output is optimized for terminals, change it via the `--format`
-flag (supported formats: `ansi`, `markdown`, `json`, and `yaml`):
+flag (supported formats: `ansi`, `markdown`, `json`, `junit`, and `yaml`):
 
     $ local-php-security-checker --format=json
 

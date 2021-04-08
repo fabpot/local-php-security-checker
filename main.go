@@ -49,8 +49,8 @@ func main() {
 		return
 	}
 
-	if *format != "" && *format != "markdown" && *format != "json" && *format != "yaml" && *format != "ansi" {
-		fmt.Fprintf(os.Stderr, "format \"%s\" is not supported (supported formats: markdown, ansi, json, and yaml)\n", *format)
+	if *format != "" && *format != "markdown" && *format != "json" && *format != "yaml" && *format != "ansi" && *format != "junit" {
+		fmt.Fprintf(os.Stderr, "format \"%s\" is not supported (supported formats: markdown, ansi, json, junit, and yaml)\n", *format)
 		os.Exit(2)
 	}
 
