@@ -2,6 +2,7 @@ package security
 
 import (
 	"encoding/xml"
+	"fmt"
 )
 
 type testsuites struct {
@@ -24,4 +25,30 @@ type testcase struct {
 	Name      string   `xml:"name,attr"`
 	Classname string   `xml:"classname,attr"`
 	Failure   string   `xml:"failure,omitempty"`
+}
+
+func ToJunit(vulns *Vulnerabilities) ([]byte, error) {
+	var packages []testsuite
+	var cases []testcase
+	ts := testsuite{}
+	for _, pkg := range vulns.Keys() {
+		v := vulns.Get(pkg)
+		tc := testcase{
+			Classname: "packages",
+			Name:      fmt.Sprintf("%s (%s)", pkg, v.Version),
+		}
+		for _, a := range v.Advisories {
+			tc.Failure = fmt.Sprintf("%s - %s (%s)", a.CVE, a.Title, a.Link)
+		}
+		cases = append(cases, tc)
+		ts.Failures++
+		ts.Tests++
+	}
+	ts.Testcases = cases
+	packages = append(packages, ts)
+	out := testsuites{
+		Name:       "Symfony Security Check Report",
+		Testsuites: packages,
+	}
+	return xml.MarshalIndent(&out, "  ", "    ")
 }

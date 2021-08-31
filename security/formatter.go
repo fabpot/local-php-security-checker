@@ -2,7 +2,6 @@ package security
 
 import (
 	"encoding/json"
-	"encoding/xml"
 	"fmt"
 	"regexp"
 	"strings"
@@ -81,32 +80,6 @@ func ToMarkdown(vulns *Vulnerabilities) []byte {
 // ToJSON outputs vulnerabilities as JSON
 func ToJSON(vulns *Vulnerabilities) ([]byte, error) {
 	return json.MarshalIndent(vulns, "", "    ")
-}
-
-func ToJunit(vulns *Vulnerabilities) ([]byte, error) {
-	var packages []testsuite
-	var cases []testcase
-	ts := testsuite{}
-	for _, pkg := range vulns.Keys() {
-		v := vulns.Get(pkg)
-		tc := testcase{
-			Classname: "packages",
-			Name:      fmt.Sprintf("%s (%s)", pkg, v.Version),
-		}
-		for _, a := range v.Advisories {
-			tc.Failure = fmt.Sprintf("%s - %s (%s)", a.CVE, a.Title, a.Link)
-		}
-		cases = append(cases, tc)
-		ts.Failures++
-		ts.Tests++
-	}
-	ts.Testcases = cases
-	packages = append(packages, ts)
-	out := testsuites{
-		Name:       "Symfony Security Check Report",
-		Testsuites: packages,
-	}
-	return xml.MarshalIndent(&out, "  ", "    ")
 }
 
 // ToYAML outputs vulnerabilities as YAML
