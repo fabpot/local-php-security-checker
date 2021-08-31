@@ -32,6 +32,7 @@ func main() {
 
 	if *help {
 		fmt.Printf("Local PHP Security Checker %s, built at %s\n", version, date)
+		flag.Usage()
 		os.Exit(0)
 	}
 
