@@ -74,7 +74,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "unable to output the results: %s\n", err)
 		os.Exit(127)
 	}
-	fmt.Printf(string(output))
+	fmt.Print(string(output))
 
 	if vulns.Count() > 0 {
 		os.Exit(1)
