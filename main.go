@@ -22,7 +22,7 @@ var (
 )
 
 func main() {
-	format := flag.String("format", "ansi", "Output format (ansi, markdown, json, or yaml)")
+	format := flag.String("format", "ansi", "Output format (ansi, junit, markdown, json, or yaml)")
 	path := flag.String("path", "", "composer.lock file or directory")
 	advisoryArchiveURL := flag.String("archive", security.AdvisoryArchiveURL, "Advisory archive URL")
 	local := flag.Bool("local", false, "Do not make HTTP calls (needs a valid cache file)")
