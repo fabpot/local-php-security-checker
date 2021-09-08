@@ -22,8 +22,9 @@ var (
 )
 
 func main() {
-	format := flag.String("format", "ansi", "Output format (ansi, markdown, json, or yaml)")
+	format := flag.String("format", "ansi", "Output format (ansi, junit, markdown, json, or yaml)")
 	path := flag.String("path", "", "composer.lock file or directory")
+	advisoryArchiveURL := flag.String("archive", security.AdvisoryArchiveURL, "Advisory archive URL")
 	local := flag.Bool("local", false, "Do not make HTTP calls (needs a valid cache file)")
 	updateCacheOnly := flag.Bool("update-cache", false, "Update the cache (other flags are ignored)")
 	help := flag.Bool("help", false, "Output help and version")
@@ -31,25 +32,26 @@ func main() {
 
 	if *help {
 		fmt.Printf("Local PHP Security Checker %s, built at %s\n", version, date)
+		flag.Usage()
 		os.Exit(0)
 	}
 
-	db, err := security.NewDB(*local)
+	db, err := security.NewDB(*local, *advisoryArchiveURL)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "unable to load the advisory DB: %s\n", err)
 		os.Exit(127)
 	}
 
 	if *updateCacheOnly {
-		if err := db.Load(); err != nil {
+		if err := db.Load(*advisoryArchiveURL); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(127)
 		}
 		return
 	}
 
-	if *format != "" && *format != "markdown" && *format != "json" && *format != "yaml" && *format != "ansi" {
-		fmt.Fprintf(os.Stderr, "format \"%s\" is not supported (supported formats: markdown, ansi, json, and yaml)\n", *format)
+	if *format != "" && *format != "markdown" && *format != "json" && *format != "yaml" && *format != "ansi" && *format != "junit" {
+		fmt.Fprintf(os.Stderr, "format \"%s\" is not supported (supported formats: markdown, ansi, json, junit, and yaml)\n", *format)
 		os.Exit(2)
 	}
 
@@ -72,7 +74,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "unable to output the results: %s\n", err)
 		os.Exit(127)
 	}
-	fmt.Printf(string(output))
+	fmt.Print(string(output))
 
 	if vulns.Count() > 0 {
 		os.Exit(1)
