@@ -26,6 +26,7 @@ func main() {
 	path := flag.String("path", "", "composer.lock file or directory")
 	advisoryArchiveURL := flag.String("archive", security.AdvisoryArchiveURL, "Advisory archive URL")
 	local := flag.Bool("local", false, "Do not make HTTP calls (needs a valid cache file)")
+	noDevPackages := flag.Bool("no-dev", false, "Do not check packages listed under require-dev")
 	updateCacheOnly := flag.Bool("update-cache", false, "Update the cache (other flags are ignored)")
 	help := flag.Bool("help", false, "Output help and version")
 	flag.Parse()
@@ -67,7 +68,7 @@ func main() {
 		os.Exit(127)
 	}
 
-	vulns := security.Analyze(lock, db)
+	vulns := security.Analyze(lock, db, *noDevPackages)
 
 	output, err := security.Format(vulns, *format)
 	if err != nil {
