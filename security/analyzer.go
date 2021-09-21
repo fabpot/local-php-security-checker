@@ -74,9 +74,13 @@ func (v *Vulnerabilities) Get(pkg string) *Vulnerability {
 }
 
 // Analyze checks if a give lock references packages with known security issues
-func Analyze(lock *Lock, db *AdvisoryDB) *Vulnerabilities {
+func Analyze(lock *Lock, db *AdvisoryDB, noDevPackages bool) *Vulnerabilities {
 	vulnerabilities := make(Vulnerabilities)
-	for _, p := range append(lock.Packages, lock.DevPackages...) {
+	packages := lock.Packages
+	if !noDevPackages {
+		packages = append(packages, lock.DevPackages...)
+	}
+	for _, p := range packages {
 		var advs []SimpleAdvisory
 		composerReference := "composer://" + p.Name
 		for _, a := range db.Advisories {
