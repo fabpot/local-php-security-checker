@@ -29,11 +29,17 @@ func main() {
 	noDevPackages := flag.Bool("no-dev", false, "Do not check packages listed under require-dev")
 	updateCacheOnly := flag.Bool("update-cache", false, "Update the cache (other flags are ignored)")
 	help := flag.Bool("help", false, "Output help and version")
+	version := flag.Bool("version", false, "Output version")
 	flag.Parse()
 
 	if *help {
-		fmt.Printf("Local PHP Security Checker %s, built at %s\n", version, date)
+		fmt.Printf("%s, built at %s\n", version, date)
 		flag.Usage()
+		os.Exit(0)
+	}
+
+	if *version {
+		fmt.Printf("Local PHP Security Checker %s, built at %s\n", version, date)
 		os.Exit(0)
 	}
 
