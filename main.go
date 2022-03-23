@@ -28,6 +28,7 @@ func main() {
 	local := flag.Bool("local", false, "Do not make HTTP calls (needs a valid cache file)")
 	noDevPackages := flag.Bool("no-dev", false, "Do not check packages listed under require-dev")
 	updateCacheOnly := flag.Bool("update-cache", false, "Update the cache (other flags are ignored)")
+	outputFile := flag.String("output", "", "Output file")
 	help := flag.Bool("help", false, "Output help and version")
 	flag.Parse()
 
@@ -77,6 +78,12 @@ func main() {
 	}
 	fmt.Print(string(output))
 
+	if *outputFile != "" {
+		if err := security.WriteFile(*outputFile, output); err != nil {
+			fmt.Fprintf(os.Stderr, "unable to write to the output file: %s\n", err)
+			os.Exit(127)
+		}
+	}
 	if vulns.Count() > 0 {
 		os.Exit(1)
 	}
