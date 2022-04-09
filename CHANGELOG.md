@@ -2,6 +2,7 @@
 
  * Add --cache-dir
  * Add --disable-exit-code
+ * Move to Go 1.18
 
 # 1.2.0 (2021-09-21)
 
