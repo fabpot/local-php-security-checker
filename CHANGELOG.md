@@ -1,4 +1,4 @@
-# 1.3.0 (2022-04-09)
+# 2.0.0 (2022-04-09)
 
  * Add --cache-dir
  * Add --disable-exit-code
