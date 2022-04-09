@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fabpot/local-php-security-checker/security"
+	"github.com/fabpot/local-php-security-checker/v2/security"
 )
 
 var (
