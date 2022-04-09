@@ -28,6 +28,7 @@ func main() {
 	local := flag.Bool("local", false, "Do not make HTTP calls (needs a valid cache file)")
 	noDevPackages := flag.Bool("no-dev", false, "Do not check packages listed under require-dev")
 	updateCacheOnly := flag.Bool("update-cache", false, "Update the cache (other flags are ignored)")
+	disableExitCode := flag.Bool("disable-exit-code", false, "Whether to fail when issues are detected")
 	help := flag.Bool("help", false, "Output help and version")
 	flag.Parse()
 
@@ -77,7 +78,7 @@ func main() {
 	}
 	fmt.Print(string(output))
 
-	if vulns.Count() > 0 {
+	if vulns.Count() > 0 && !*disableExitCode {
 		os.Exit(1)
 	}
 }
