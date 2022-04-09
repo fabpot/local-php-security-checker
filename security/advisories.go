@@ -20,7 +20,7 @@ const AdvisoryArchiveURL = "https://codeload.github.com/FriendsOfPHP/security-ad
 // AdvisoryDB stores all known security advisories
 type AdvisoryDB struct {
 	Advisories  []Advisory
-	CacheDir    string
+	cacheDir    string
 	noHTTPCalls bool
 }
 
@@ -47,19 +47,19 @@ type Cache struct {
 }
 
 // NewDB fetches the advisory DB from Github
-func NewDB(noHTTPCalls bool, advisoryArchiveURL string) (*AdvisoryDB, error) {
-	db := &AdvisoryDB{noHTTPCalls: noHTTPCalls}
-	if err := db.Load(advisoryArchiveURL); err != nil {
+func NewDB(noHTTPCalls bool, advisoryArchiveURL, cacheDir string) (*AdvisoryDB, error) {
+	db := &AdvisoryDB{noHTTPCalls: noHTTPCalls, cacheDir: cacheDir}
+	if err := db.load(advisoryArchiveURL); err != nil {
 		return nil, fmt.Errorf("unable to fetch advisories: %s", err)
 	}
 
 	return db, nil
 }
 
-// Load Loads fetches the database from Github and reads/loads current advisories
+// load loads fetches the database from Github and reads/loads current advisories
 // from the repository. Cache handling is delegated to http.Transport and
 // **must** be handled appropriately.
-func (db *AdvisoryDB) Load(advisoryArchiveURL string) error {
+func (db *AdvisoryDB) load(advisoryArchiveURL string) error {
 	if len(db.Advisories) > 0 {
 		return nil
 	}
@@ -67,7 +67,7 @@ func (db *AdvisoryDB) Load(advisoryArchiveURL string) error {
 	db.Advisories = []Advisory{}
 
 	var cache *Cache
-	cachePath := filepath.Join(db.CacheDir, "php_sec_db.json")
+	cachePath := filepath.Join(db.cacheDir, "php_sec_db.json")
 	if cacheContent, err := ioutil.ReadFile(cachePath); err == nil {
 		// ignore errors
 		json.Unmarshal(cacheContent, &cache)

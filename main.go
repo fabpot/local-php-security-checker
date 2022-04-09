@@ -39,18 +39,13 @@ func main() {
 		os.Exit(0)
 	}
 
-	db, err := security.NewDB(*local, *advisoryArchiveURL)
-	db.CacheDir = *cacheDir
+	db, err := security.NewDB(*local, *advisoryArchiveURL, *cacheDir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "unable to load the advisory DB: %s\n", err)
 		os.Exit(127)
 	}
 
 	if *updateCacheOnly {
-		if err := db.Load(*advisoryArchiveURL); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(127)
-		}
 		return
 	}
 
