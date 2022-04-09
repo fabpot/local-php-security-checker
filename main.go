@@ -75,6 +75,13 @@ func main() {
 	}
 	fmt.Print(string(output))
 
+	if os.Getenv("GITHUB_WORKSPACE") != "" {
+		// inside a Github action, export vulns
+		if output, err := security.Format(vulns, "raw_json"); err != nil {
+			fmt.Printf("::set-output name=vulns::%s", output)
+		}
+	}
+
 	if vulns.Count() > 0 && !*disableExitCode {
 		os.Exit(1)
 	}
