@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -21,6 +20,7 @@ const AdvisoryArchiveURL = "https://codeload.github.com/FriendsOfPHP/security-ad
 // AdvisoryDB stores all known security advisories
 type AdvisoryDB struct {
 	Advisories  []Advisory
+	cacheDir    string
 	noHTTPCalls bool
 }
 
@@ -47,8 +47,8 @@ type Cache struct {
 }
 
 // NewDB fetches the advisory DB from Github
-func NewDB(noHTTPCalls bool, advisoryArchiveURL string) (*AdvisoryDB, error) {
-	db := &AdvisoryDB{noHTTPCalls: noHTTPCalls}
+func NewDB(noHTTPCalls bool, advisoryArchiveURL, cacheDir string) (*AdvisoryDB, error) {
+	db := &AdvisoryDB{noHTTPCalls: noHTTPCalls, cacheDir: cacheDir}
 	if err := db.Load(advisoryArchiveURL); err != nil {
 		return nil, fmt.Errorf("unable to fetch advisories: %s", err)
 	}
@@ -67,7 +67,7 @@ func (db *AdvisoryDB) Load(advisoryArchiveURL string) error {
 	db.Advisories = []Advisory{}
 
 	var cache *Cache
-	cachePath := filepath.Join(os.TempDir(), "php_sec_db.json")
+	cachePath := filepath.Join(db.cacheDir, "php_sec_db.json")
 	if cacheContent, err := ioutil.ReadFile(cachePath); err == nil {
 		// ignore errors
 		json.Unmarshal(cacheContent, &cache)

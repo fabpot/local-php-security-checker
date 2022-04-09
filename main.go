@@ -25,6 +25,7 @@ func main() {
 	format := flag.String("format", "ansi", "Output format (ansi, junit, markdown, json, or yaml)")
 	path := flag.String("path", "", "composer.lock file or directory")
 	advisoryArchiveURL := flag.String("archive", security.AdvisoryArchiveURL, "Advisory archive URL")
+	cacheDir := flag.String("cache-dir", os.TempDir(), "Cache directory")
 	local := flag.Bool("local", false, "Do not make HTTP calls (needs a valid cache file)")
 	noDevPackages := flag.Bool("no-dev", false, "Do not check packages listed under require-dev")
 	updateCacheOnly := flag.Bool("update-cache", false, "Update the cache (other flags are ignored)")
@@ -37,7 +38,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	db, err := security.NewDB(*local, *advisoryArchiveURL)
+	db, err := security.NewDB(*local, *advisoryArchiveURL, *cacheDir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "unable to load the advisory DB: %s\n", err)
 		os.Exit(127)
