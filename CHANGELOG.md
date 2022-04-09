@@ -1,3 +1,8 @@
+# 1.3.0 (2022-04-09)
+
+ * Add --cache-dir
+ * Add --disable-exit-code
+
 # 1.2.0 (2021-09-21)
 
  * Add --no-dev
