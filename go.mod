@@ -1,4 +1,4 @@
-module github.com/fabpot/local-php-security-checker
+module github.com/fabpot/local-php-security-checker/v2
 
 go 1.18
 
