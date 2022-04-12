@@ -22,9 +22,10 @@ type Vulnerability struct {
 
 // SimpleAdvisory represents an advisory for export
 type SimpleAdvisory struct {
-	Title string `json:"title"`
-	Link  string `json:"link"`
-	CVE   string `json:"cve"`
+	Title string  `json:"title"`
+	Link  string  `json:"link"`
+	CVE   string  `json:"cve"`
+	CVSS  float64 `json:"cvss"`
 }
 
 func (a SimpleAdvisory) String() string {
@@ -118,10 +119,17 @@ func Analyze(lock *Lock, db *AdvisoryDB, noDevPackages bool) *Vulnerabilities {
 						continue
 					}
 				}
+
+				var cvss float64
+				res, err := SearchDetailCve(a.CVE)
+				if err == nil {
+					cvss = res.Cvss
+				}
 				advs = append(advs, SimpleAdvisory{
 					CVE:   a.CVE,
 					Link:  a.Link,
 					Title: a.Title,
+					CVSS:  cvss,
 				})
 			}
 		}
