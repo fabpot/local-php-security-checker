@@ -8,6 +8,9 @@ import (
 )
 
 type CveResponse struct {
+	Access struct {
+		Complexity string `json:"complexity"`
+	} `json:"access"`
 	Cvss float64 `json:"cvss"`
 }
 
