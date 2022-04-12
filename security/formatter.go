@@ -56,7 +56,7 @@ func ToANSI(vulns *Vulnerabilities) []byte {
 				output += fmt.Sprintf(" * [%.2f][%s]\u001B[34m%s\u001B[0m: %s\n", a.CVSS, a.Сomplexity, cve, title)
 			} else {
 				output += fmt.Sprintf(" * [%.2f][%s][\u001B[34m%s\u001B[0m][]: %s\n", a.CVSS, a.Сomplexity, cve, title)
-				links += fmt.Sprintf("[%.2f[%s][%s]: \u001B]8;;%s\u0007%s\u001B]8;;\u0007\u001B[0m\n", a.CVSS, a.Сomplexity, cve, a.Link, a.Link)
+				links += fmt.Sprintf("[%.2f][%s][%s]: \u001B]8;;%s\u0007%s\u001B]8;;\u0007\u001B[0m\n", a.CVSS, a.Сomplexity, cve, a.Link, a.Link)
 			}
 		}
 		output += fmt.Sprintln("")
