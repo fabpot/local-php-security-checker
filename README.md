@@ -23,6 +23,10 @@ flag (supported formats: `ansi`, `markdown`, `json`, `junit`, and `yaml`):
 
     $ local-php-security-checker --format=json
 
+All packages are checked for security vulnerabilities by default. You can skip the checks for packages listed in `require-dev` by passing the `no-dev` flag:
+
+    $ local-php-security-checker --no-dev
+
 When running the command, it checks for an updated vulnerability database and
 downloads it from Github if it changed since the last run. If you want to avoid
 the HTTP round-trip, use `--local`. To force a database update without checking

@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fabpot/local-php-security-checker/security"
+	"github.com/fabpot/local-php-security-checker/v2/security"
 )
 
 var (
@@ -25,8 +25,11 @@ func main() {
 	format := flag.String("format", "ansi", "Output format (ansi, junit, markdown, json, or yaml)")
 	path := flag.String("path", "", "composer.lock file or directory")
 	advisoryArchiveURL := flag.String("archive", security.AdvisoryArchiveURL, "Advisory archive URL")
+	cacheDir := flag.String("cache-dir", os.TempDir(), "Cache directory")
 	local := flag.Bool("local", false, "Do not make HTTP calls (needs a valid cache file)")
+	noDevPackages := flag.Bool("no-dev", false, "Do not check packages listed under require-dev")
 	updateCacheOnly := flag.Bool("update-cache", false, "Update the cache (other flags are ignored)")
+	disableExitCode := flag.Bool("disable-exit-code", false, "Whether to fail when issues are detected")
 	help := flag.Bool("help", false, "Output help and version")
 	flag.Parse()
 
@@ -36,17 +39,13 @@ func main() {
 		os.Exit(0)
 	}
 
-	db, err := security.NewDB(*local, *advisoryArchiveURL)
+	db, err := security.NewDB(*local, *advisoryArchiveURL, *cacheDir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "unable to load the advisory DB: %s\n", err)
 		os.Exit(127)
 	}
 
 	if *updateCacheOnly {
-		if err := db.Load(*advisoryArchiveURL); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(127)
-		}
 		return
 	}
 
@@ -67,7 +66,7 @@ func main() {
 		os.Exit(127)
 	}
 
-	vulns := security.Analyze(lock, db)
+	vulns := security.Analyze(lock, db, *noDevPackages)
 
 	output, err := security.Format(vulns, *format)
 	if err != nil {
@@ -76,7 +75,14 @@ func main() {
 	}
 	fmt.Print(string(output))
 
-	if vulns.Count() > 0 {
+	if os.Getenv("GITHUB_WORKSPACE") != "" {
+		// inside a Github action, export vulns
+		if output, err := security.Format(vulns, "raw_json"); err != nil {
+			fmt.Printf("::set-output name=vulns::%s", output)
+		}
+	}
+
+	if vulns.Count() > 0 && !*disableExitCode {
 		os.Exit(1)
 	}
 }
