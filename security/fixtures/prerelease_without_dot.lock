@@ -1,0 +1,16 @@
+{
+    "packages": [
+        {
+            "name": "symfony/apache-pack",
+            "version": "v1.0.0-alpha10"
+        },
+        {
+            "name": "test/packagename",
+            "version": "2.0-beta3"
+        },
+        {
+            "name": "test/another",
+            "version": "2.0-RC1"
+        }
+    ]
+}

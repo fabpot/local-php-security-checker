@@ -20,7 +20,7 @@ func TestLock(t *testing.T) {
 	assert.Equal(t, lock.Packages[0].Name, "symfony/apache-pack")
 }
 
-func TestIntegerAsVerionLock(t *testing.T) {
+func TestIntegerAsVersionLock(t *testing.T) {
 	file, err := os.Open("fixtures/integer_as_version.lock")
 	if err != nil {
 		panic(err)
@@ -47,4 +47,18 @@ func TestLocateLock(t *testing.T) {
 		_, err := LocateLock(path)
 		assert.Nil(t, err)
 	}
+}
+
+func TestPrereleaseWithoutDot(t *testing.T) {
+	file, err := os.Open("fixtures/prerelease_without_dot.lock")
+	if err != nil {
+		panic(err)
+	}
+	lock, err := NewLock(bufio.NewReader(file))
+	if err != nil {
+		panic(err)
+	}
+	assert.Equal(t, lock.Packages[0].Version, Version("v1.0.0-alpha.10"))
+	assert.Equal(t, lock.Packages[1].Version, Version("2.0-beta.3"))
+	assert.Equal(t, lock.Packages[2].Version, Version("2.0-RC.1"))
 }

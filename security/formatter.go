@@ -17,6 +17,8 @@ func Format(vulns *Vulnerabilities, format string) ([]byte, error) {
 		return ToMarkdown(vulns), nil
 	} else if format == "json" {
 		return ToJSON(vulns)
+	} else if format == "junit" {
+		return ToJunit(vulns)
 	} else if format == "yaml" || format == "yml" {
 		return ToYAML(vulns)
 	}
