@@ -17,6 +17,8 @@ func Format(vulns *Vulnerabilities, format string) ([]byte, error) {
 		return ToMarkdown(vulns), nil
 	} else if format == "json" {
 		return ToJSON(vulns)
+	} else if format == "raw_json" {
+		return ToRawJSON(vulns)
 	} else if format == "junit" {
 		return ToJunit(vulns)
 	} else if format == "yaml" || format == "yml" {
@@ -80,6 +82,11 @@ func ToMarkdown(vulns *Vulnerabilities) []byte {
 // ToJSON outputs vulnerabilities as JSON
 func ToJSON(vulns *Vulnerabilities) ([]byte, error) {
 	return json.MarshalIndent(vulns, "", "    ")
+}
+
+// ToRawJSON outputs vulnerabilities as raw JSON
+func ToJSON(vulns *Vulnerabilities) ([]byte, error) {
+	return json.Marshal(vulns, "", "    ")
 }
 
 // ToYAML outputs vulnerabilities as YAML
