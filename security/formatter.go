@@ -86,7 +86,7 @@ func ToJSON(vulns *Vulnerabilities) ([]byte, error) {
 
 // ToRawJSON outputs vulnerabilities as raw JSON
 func ToJSON(vulns *Vulnerabilities) ([]byte, error) {
-	return json.Marshal(vulns, "", "    ")
+	return json.Marshal(vulns)
 }
 
 // ToYAML outputs vulnerabilities as YAML
