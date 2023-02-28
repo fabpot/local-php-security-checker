@@ -83,11 +83,11 @@ func Analyze(lock *Lock, db *AdvisoryDB, noDevPackages bool) *Vulnerabilities {
 	for _, p := range packages {
 		var advs []SimpleAdvisory
 		composerReference := "composer://" + p.Name
+		packageBranchName := normalizeVersion(string(p.Version))
 		for _, a := range db.Advisories {
 			if a.Reference != composerReference {
 				continue
 			}
-			packageBranchName := normalizeVersion(string(p.Version))
 			for branchName, branch := range a.Branches {
 				// dev versions must be checked via a date
 				if isDev(p) {
