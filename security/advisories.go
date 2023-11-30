@@ -6,8 +6,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -68,7 +69,7 @@ func (db *AdvisoryDB) load(advisoryArchiveURL string) error {
 
 	var cache *Cache
 	cachePath := filepath.Join(db.cacheDir, "php_sec_db.json")
-	if cacheContent, err := ioutil.ReadFile(cachePath); err == nil {
+	if cacheContent, err := os.ReadFile(cachePath); err == nil {
 		// ignore errors
 		json.Unmarshal(cacheContent, &cache)
 	}
@@ -93,7 +94,7 @@ func (db *AdvisoryDB) load(advisoryArchiveURL string) error {
 		defer resp.Body.Close()
 		var body []byte
 		if resp.StatusCode != http.StatusNotModified {
-			body, err = ioutil.ReadAll(resp.Body)
+			body, err = io.ReadAll(resp.Body)
 			if err != nil {
 				return err
 			}
@@ -125,7 +126,7 @@ func (db *AdvisoryDB) load(advisoryArchiveURL string) error {
 		}
 		defer f.Close()
 
-		contents, err := ioutil.ReadAll(f)
+		contents, err := io.ReadAll(f)
 		if err != nil {
 			return fmt.Errorf("unable to read %s: %s", zipFile.Name, err)
 		}
