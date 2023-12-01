@@ -105,7 +105,7 @@ func (db *AdvisoryDB) load(advisoryArchiveURL string) error {
 			}
 			cacheContent, err := json.Marshal(cache)
 			if err == nil {
-				ioutil.WriteFile(cachePath, cacheContent, 0644)
+				os.WriteFile(cachePath, cacheContent, 0644)
 			}
 		}
 	}
