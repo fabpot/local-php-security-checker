@@ -32,12 +32,22 @@ downloads it from Github if it changed since the last run. If you want to avoid
 the HTTP round-trip, use `--local`. To force a database update without checking
 for a project, use `--update-cache`.
 
+
+Building Docker image
+
+    $ docker build -t local-php-security-checker .
+
+Mount directory containing a PHP project
+
+    $ docker run -v /path/to/your/project:/project/ local-php-security-checker --path=/project
+
 If you want to continuously check for security issues on your applications in
 production, you can use this tool in combination with [croncape][3] to get an
 email whenever a new security issue is detected:
 
     MAILTO=sysadmins@example.com
     50 23 * * * croncape php-security-checker --path=/path/to/php/project
+
 
 [1]: https://github.com/FriendsOfPHP/security-advisories
 [2]: https://github.com/fabpot/local-php-security-checker/releases
