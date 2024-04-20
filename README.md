@@ -46,7 +46,7 @@ This tool returns the following codes
 | 0    | `--help`<br>successful run                                                         |
 | 1    | At least one vulnerability is found                                                |
 | 2    | Invalid `--format` option                                                          |
-| 127  | Unable to load database<br>Unable to find lock file<br>Github output not available |
+| 127  | Unable to load database<br>Unable to find lock file<br>GitHub output not available |
 
 [1]: https://github.com/FriendsOfPHP/security-advisories
 [2]: https://github.com/fabpot/local-php-security-checker/releases
