@@ -39,6 +39,15 @@ email whenever a new security issue is detected:
     MAILTO=sysadmins@example.com
     50 23 * * * croncape php-security-checker --path=/path/to/php/project
 
+This tool returns the following codes
+
+| Code | Actions                                                                            |
+|------|------------------------------------------------------------------------------------|
+| 0    | `--help`<br>successful run                                                         |
+| 1    | At least one vulnerability is found                                                |
+| 2    | Invalid `--format` option                                                          |
+| 127  | Unable to load database<br>Unable to find lock file<br>Github output not available |
+
 [1]: https://github.com/FriendsOfPHP/security-advisories
 [2]: https://github.com/fabpot/local-php-security-checker/releases
 [3]: https://github.com/symfonycorp/croncape
