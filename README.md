@@ -43,7 +43,7 @@ This tool returns the following codes
 
 | Code | Actions                                                                            |
 |------|------------------------------------------------------------------------------------|
-| 0    | `--help`<br>successful run                                                         |
+| 0    | `--help`<br>Successful run                                                         |
 | 1    | At least one vulnerability is found                                                |
 | 2    | Invalid `--format` option                                                          |
 | 127  | Unable to load database<br>Unable to find lock file<br>GitHub output not available |
