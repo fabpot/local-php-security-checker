@@ -86,7 +86,7 @@ func main() {
 
 		f, err := os.OpenFile(gOutFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, fmt.Sprintf("unable to open github output: %s\n", err))
+			fmt.Fprintf(os.Stderr, "unable to open github output: %s\n", err)
 			os.Exit(127)
 		}
 		defer f.Close()
@@ -94,7 +94,7 @@ func main() {
 		// inside a Github action, export vulns
 		if output, err := security.Format(vulns, "raw_json"); err == nil {
 			if _, err = f.WriteString("vulns=" + string(output) + "\n"); err != nil {
-				fmt.Fprintf(os.Stderr, fmt.Sprintf("unable to write into github output: %s\n", err))
+				fmt.Fprintf(os.Stderr, "unable to write into github output: %s\n", err)
 				os.Exit(127)
 			}
 		}
