@@ -24,7 +24,7 @@ type testcase struct {
 	XMLName   xml.Name `xml:"testcase"`
 	Name      string   `xml:"name,attr"`
 	Classname string   `xml:"classname,attr"`
-	Failure   string   `xml:"failure,omitempty"`
+	Failure   []string `xml:"failure,omitempty"`
 }
 
 func ToJunit(vulns *Vulnerabilities) ([]byte, error) {
@@ -38,7 +38,7 @@ func ToJunit(vulns *Vulnerabilities) ([]byte, error) {
 			Name:      fmt.Sprintf("%s (%s)", pkg, v.Version),
 		}
 		for _, a := range v.Advisories {
-			tc.Failure = fmt.Sprintf("%s - %s (%s)", a.CVE, a.Title, a.Link)
+			tc.Failure = append(tc.Failure, fmt.Sprintf("%s - %s (%s)", a.CVE, a.Title, a.Link))
 		}
 		cases = append(cases, tc)
 		ts.Failures++

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/mitchellh/go-homedir"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -27,7 +26,7 @@ type Lock struct {
 
 // NewLock creates a lock file wrapper
 func NewLock(reader io.Reader) (*Lock, error) {
-	contents, err := ioutil.ReadAll(reader)
+	contents, err := io.ReadAll(reader)
 	if err != nil {
 		return nil, errors.New("unable to read lock file")
 	}
