@@ -13,16 +13,18 @@ builds:
         - amd64
         - arm
         - arm64
+    ignore:
+      - goos: windows
+        goarch: arm
+      - goos: windows
+        goarch: arm64
+      - goos: darwin
+        goarch: 386
+      - goos: darwin
+        goarch: arm
 archives:
   - format: binary
     name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
-    replacements:
-        darwin: Darwin
-        linux: Linux
-        windows: Windows
-        386: i386
-        amd64: x86_64
-        arm64: aarch64
 checksum:
     name_template: 'checksums.txt'
 snapshot:
