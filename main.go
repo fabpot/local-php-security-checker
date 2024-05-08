@@ -31,11 +31,17 @@ func main() {
 	updateCacheOnly := flag.Bool("update-cache", false, "Update the cache (other flags are ignored)")
 	disableExitCode := flag.Bool("disable-exit-code", false, "Whether to fail when issues are detected")
 	help := flag.Bool("help", false, "Output help and version")
+	version := flag.Bool("version", false, "Output version")
 	flag.Parse()
 
 	if *help {
 		fmt.Printf("Local PHP Security Checker %s, built at %s\n", version, date)
 		flag.Usage()
+		os.Exit(0)
+	}
+
+	if *version {
+		fmt.Printf("Local PHP Security Checker %s, built at %s\n", version, date)
 		os.Exit(0)
 	}
 
