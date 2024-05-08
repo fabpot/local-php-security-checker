@@ -9,6 +9,7 @@ builds:
         - windows
         - darwin
 archives:
+    - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     - format: binary
 checksum:
     name_template: 'checksums.txt'
