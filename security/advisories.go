@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -21,6 +21,7 @@ const AdvisoryArchiveURL = "https://codeload.github.com/FriendsOfPHP/security-ad
 // AdvisoryDB stores all known security advisories
 type AdvisoryDB struct {
 	Advisories  []Advisory
+	cacheDir    string
 	noHTTPCalls bool
 }
 
@@ -47,19 +48,19 @@ type Cache struct {
 }
 
 // NewDB fetches the advisory DB from Github
-func NewDB(noHTTPCalls bool, advisoryArchiveURL string) (*AdvisoryDB, error) {
-	db := &AdvisoryDB{noHTTPCalls: noHTTPCalls}
-	if err := db.Load(advisoryArchiveURL); err != nil {
+func NewDB(noHTTPCalls bool, advisoryArchiveURL, cacheDir string) (*AdvisoryDB, error) {
+	db := &AdvisoryDB{noHTTPCalls: noHTTPCalls, cacheDir: cacheDir}
+	if err := db.load(advisoryArchiveURL); err != nil {
 		return nil, fmt.Errorf("unable to fetch advisories: %s", err)
 	}
 
 	return db, nil
 }
 
-// Load Loads fetches the database from Github and reads/loads current advisories
+// load loads fetches the database from Github and reads/loads current advisories
 // from the repository. Cache handling is delegated to http.Transport and
 // **must** be handled appropriately.
-func (db *AdvisoryDB) Load(advisoryArchiveURL string) error {
+func (db *AdvisoryDB) load(advisoryArchiveURL string) error {
 	if len(db.Advisories) > 0 {
 		return nil
 	}
@@ -67,8 +68,8 @@ func (db *AdvisoryDB) Load(advisoryArchiveURL string) error {
 	db.Advisories = []Advisory{}
 
 	var cache *Cache
-	cachePath := filepath.Join(os.TempDir(), "php_sec_db.json")
-	if cacheContent, err := ioutil.ReadFile(cachePath); err == nil {
+	cachePath := filepath.Join(db.cacheDir, "php_sec_db.json")
+	if cacheContent, err := os.ReadFile(cachePath); err == nil {
 		// ignore errors
 		json.Unmarshal(cacheContent, &cache)
 	}
@@ -93,7 +94,7 @@ func (db *AdvisoryDB) Load(advisoryArchiveURL string) error {
 		defer resp.Body.Close()
 		var body []byte
 		if resp.StatusCode != http.StatusNotModified {
-			body, err = ioutil.ReadAll(resp.Body)
+			body, err = io.ReadAll(resp.Body)
 			if err != nil {
 				return err
 			}
@@ -104,7 +105,7 @@ func (db *AdvisoryDB) Load(advisoryArchiveURL string) error {
 			}
 			cacheContent, err := json.Marshal(cache)
 			if err == nil {
-				ioutil.WriteFile(cachePath, cacheContent, 0644)
+				os.WriteFile(cachePath, cacheContent, 0644)
 			}
 		}
 	}
@@ -125,7 +126,7 @@ func (db *AdvisoryDB) Load(advisoryArchiveURL string) error {
 		}
 		defer f.Close()
 
-		contents, err := ioutil.ReadAll(f)
+		contents, err := io.ReadAll(f)
 		if err != nil {
 			return fmt.Errorf("unable to read %s: %s", zipFile.Name, err)
 		}
