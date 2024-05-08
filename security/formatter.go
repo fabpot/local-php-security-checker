@@ -31,7 +31,7 @@ func Format(vulns *Vulnerabilities, format string) ([]byte, error) {
 // ToANSI returns vulnerabilities as text with ANSI code for colors
 func ToANSI(vulns *Vulnerabilities) []byte {
 	if !hasPosixColorSupport() {
-		return ToText(vulns)
+		return ToMarkdown(vulns)
 	}
 
 	var output string
@@ -73,51 +73,6 @@ func ToANSI(vulns *Vulnerabilities) []byte {
 
 	output += "\u001B[33mNote that this checker can only detect vulnerabilities that are referenced in the security advisories database.\n" +
 		"Execute this command regularly to check the newly discovered vulnerabilities.\u001B[0m\n"
-
-	return []byte(output)
-}
-
-// ToText returns vulnerabilities as text
-func ToText(vulns *Vulnerabilities) []byte {
-	var output string
-	output += "Symfony Security Check Report\n"
-	output += "=============================\n\n"
-	if vulns.CountVulnerablePackages() == 1 {
-		output += " package has known vulnerabilities.\n"
-	} else if vulns.CountVulnerablePackages() > 0 {
-		output += fmt.Sprintf("%d packages have known vulnerabilities.\n", vulns.CountVulnerablePackages())
-	} else {
-		output += "No packages have known vulnerabilities."
-	}
-	output += fmt.Sprintln("")
-	links := ""
-	ref := 0
-	for _, pkg := range vulns.Keys() {
-		v := vulns.Get(pkg)
-		str := fmt.Sprintf("%s (%s)", pkg, v.Version)
-		output += fmt.Sprintf("%s\n%s\n\n", str, strings.Repeat("-", len(str)))
-		for _, a := range v.Advisories {
-			cve := a.CVE
-			if cve == "" {
-				ref++
-				cve = fmt.Sprintf("CVE-NONE-%04d", ref)
-			}
-			title := strings.TrimPrefix(a.Title, a.CVE+": ")
-
-			if a.Link == "" {
-				output += fmt.Sprintf(" * %s: %s\n", cve, title)
-			} else {
-				output += fmt.Sprintf(" * [%s][]: %s\n", cve, title)
-				links += fmt.Sprintf("[%s]: %s %s\n", cve, a.Link, a.Link)
-			}
-		}
-		output += fmt.Sprintln("")
-	}
-	output += links
-	output += fmt.Sprintln("")
-
-	output += "Note that this checker can only detect vulnerabilities that are referenced in the security advisories database.\n" +
-		"Execute this command regularly to check the newly discovered vulnerabilities.\n"
 
 	return []byte(output)
 }
