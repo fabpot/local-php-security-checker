@@ -22,7 +22,7 @@ var (
 )
 
 func main() {
-	format := flag.String("format", "ansi", "Output format (ansi, junit, markdown, json, or yaml)")
+	format := flag.String("format", "ansi", "Output format (ansi, text, junit, markdown, json, or yaml)")
 	path := flag.String("path", "", "composer.lock file or directory")
 	advisoryArchiveURL := flag.String("archive", security.AdvisoryArchiveURL, "Advisory archive URL")
 	cacheDir := flag.String("cache-dir", os.TempDir(), "Cache directory")
@@ -55,7 +55,7 @@ func main() {
 		return
 	}
 
-	if *format != "" && *format != "markdown" && *format != "json" && *format != "yaml" && *format != "ansi" && *format != "junit" {
+	if *format != "" && *format != "markdown" && *format != "json" && *format != "text" && *format != "yaml" && *format != "ansi" && *format != "junit" {
 		fmt.Fprintf(os.Stderr, "format \"%s\" is not supported (supported formats: markdown, ansi, json, junit, and yaml)\n", *format)
 		os.Exit(2)
 	}
