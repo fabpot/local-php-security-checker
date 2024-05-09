@@ -13,7 +13,7 @@ import (
 // Format formats the vulnerabilities in the given format
 func Format(vulns *Vulnerabilities, format string) ([]byte, error) {
 	if format == "ansi" {
-		return ToANSI(vulns), nil
+		return ToANSI(vulns, false), nil
 	} else if format == "text" || format == "txt" || format == "markdown" || format == "md" {
 		return ToMarkdown(vulns), nil
 	} else if format == "json" {
@@ -29,8 +29,8 @@ func Format(vulns *Vulnerabilities, format string) ([]byte, error) {
 }
 
 // ToANSI returns vulnerabilities as text with ANSI code for colors
-func ToANSI(vulns *Vulnerabilities) []byte {
-	if !hasPosixColorSupport() {
+func ToANSI(vulns *Vulnerabilities, forceANSICodes bool) []byte {
+	if !hasPosixColorSupport() && !forceANSICodes {
 		return ToMarkdown(vulns)
 	}
 
@@ -81,7 +81,7 @@ var ansiRe = regexp.MustCompile("(\u001B\\[\\d+m|\u001B\\]8;;.*?\u0007)")
 
 // ToMarkdown returns vulnerabilities as Markdown
 func ToMarkdown(vulns *Vulnerabilities) []byte {
-	return ansiRe.ReplaceAll(ToANSI(vulns), nil)
+	return ansiRe.ReplaceAll(ToANSI(vulns, true), nil)
 }
 
 // ToJSON outputs vulnerabilities as JSON
