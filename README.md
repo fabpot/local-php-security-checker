@@ -1,6 +1,10 @@
 Local PHP Security Checker
 ==========================
 
+**WARNING**: This repository is now archived. Use `composer audit` instead:
+
+    COMPOSER_AUDIT_ABANDONED=ignore composer audit
+
 The Local PHP Security Checker is a command line tool that checks if your PHP
 application depends on PHP packages with known security vulnerabilities. It
 uses the [Security Advisories Database][1] behind the scenes.
